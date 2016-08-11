@@ -1,5 +1,7 @@
 package quicksort
 
+import "math/rand"
+
 func Sort(array []int) {
 	if len(array) == 0 {
 		return
@@ -16,6 +18,8 @@ func sort(array []int, s, e int) {
 	var pivot, g, u int
 	g = s
 	u = s
+	pivotIndex := rand.Intn(e-s) + s
+	array[pivotIndex], array[e] = array[e], array[pivotIndex]
 	pivot = array[e]
 
 	for ; u < e; u++ {
