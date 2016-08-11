@@ -1,4 +1,5 @@
 # Quicksort
+[![Build Status](https://travis-ci.org/jutkko/quicksort.svg?branch=master)](https://travis-ci.org/jutkko/quicksort)
 This repo contains a quicksort algorithm implemented in golang.
 
 # Reference
