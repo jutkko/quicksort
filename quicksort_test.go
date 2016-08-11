@@ -1,14 +1,15 @@
 package quicksort
 
 import (
-	"fmt"
 	"math/rand"
 	"reflect"
 	builtinSort "sort"
 	"testing"
 )
 
-func TestEmptyIntArray(t *testing.T) {
+const COUNT = 1000000
+
+func TestEmptyArray(t *testing.T) {
 	intArray := []int{}
 	Sort(intArray)
 	if len(intArray) > 0 {
@@ -16,7 +17,7 @@ func TestEmptyIntArray(t *testing.T) {
 	}
 }
 
-func TestOrderedIntArray(t *testing.T) {
+func TestOrderedArray(t *testing.T) {
 	intArray := []int{1, 2, 3, 4, 5}
 	Sort(intArray)
 	var prev, curr int
@@ -31,10 +32,9 @@ func TestOrderedIntArray(t *testing.T) {
 	}
 }
 
-func TestUnorderedIntArray(t *testing.T) {
+func TestUnorderedArray(t *testing.T) {
 	intArray := []int{5, 2, 3, 4, 1}
 	Sort(intArray)
-	fmt.Printf("%#v\n", intArray)
 	var prev, curr int
 	for index, i := range intArray {
 		if index > 0 {
@@ -47,14 +47,13 @@ func TestUnorderedIntArray(t *testing.T) {
 	}
 }
 
-func TestLargeIntArray(t *testing.T) {
-	count := 10000
-	intArray := make([]int, 0, count)
-	for i := 0; i < count; i++ {
-		intArray = append(intArray, rand.Intn(10*count))
+func TestLargeArray(t *testing.T) {
+	intArray := make([]int, 0, COUNT)
+	for i := 0; i < COUNT; i++ {
+		intArray = append(intArray, rand.Intn(10*COUNT))
 	}
 
-	copyIntArray := make([]int, count, count)
+	copyIntArray := make([]int, COUNT, COUNT)
 	copy(copyIntArray, intArray)
 
 	Sort(intArray)
@@ -62,4 +61,44 @@ func TestLargeIntArray(t *testing.T) {
 	if !reflect.DeepEqual(intArray, copyIntArray) {
 		t.Errorf("Sort is still borked!")
 	}
+}
+
+func BenchmarkLargeArray(b *testing.B) {
+	intArray := make([]int, 0, COUNT)
+	for i := 0; i < COUNT; i++ {
+		intArray = append(intArray, rand.Intn(10*COUNT))
+	}
+
+	b.ResetTimer()
+	Sort(intArray)
+}
+
+func BenchmarkLargeArrayBuiltinSort(b *testing.B) {
+	intArray := make([]int, 0, COUNT)
+	for i := 0; i < COUNT; i++ {
+		intArray = append(intArray, rand.Intn(10*COUNT))
+	}
+
+	b.ResetTimer()
+	builtinSort.Ints(intArray)
+}
+
+func BenchmarkLargeOrderedArray(b *testing.B) {
+	intArray := make([]int, 0, COUNT)
+	for i := 0; i < COUNT; i++ {
+		intArray = append(intArray, i)
+	}
+
+	b.ResetTimer()
+	Sort(intArray)
+}
+
+func BenchmarkLargeOrderedArrayBuiltinSort(b *testing.B) {
+	intArray := make([]int, 0, COUNT)
+	for i := 0; i < COUNT; i++ {
+		intArray = append(intArray, i)
+	}
+
+	b.ResetTimer()
+	builtinSort.Ints(intArray)
 }
